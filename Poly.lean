@@ -47,4 +47,9 @@ def bang0poly {p : Poly} : polymap poly0 p  :=
 def bang1poly {P : Poly} : polymap P poly1 := (Sigma.mk bang1 λ _ ↦ bang0)
 
 def composemap {p q r : Poly} : (polymap p q) -> (polymap q r) -> (polymap p r) :=
-sorry --Priyaa?
+  λ f g ↦ 
+  let onPos : p.pos -> r.pos := g.fst ∘ f.fst
+  let onDir : (P : p.pos) -> (r.dir $ onPos P) -> (p.dir P) := λ P rd ↦ (f.snd P $ g.snd (f.fst P) rd)
+  (Sigma.mk onPos onDir)
+
+

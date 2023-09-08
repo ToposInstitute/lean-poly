@@ -16,10 +16,6 @@ def yon : Poly := linear Unit
 
 def representable (D : Type) : Poly := monomial Unit D
 
-def bang0 {T : Type} : Empty -> T  := by 
-  intro x
-  cases x
-
 def bang1 {T : Type} : T -> Unit := λ _ ↦ Unit.unit 
 def ident {T : Type} : T -> T := λ t ↦ t
 
@@ -31,7 +27,7 @@ def polymap (p q: Poly) : Type :=
 
 def constantMap {T T' : Type} : 
   (T -> T') -> polymap (const T) (const T') :=
-  λ f ↦ (Sigma.mk f λ _ ↦ bang0 ) --I don't know how to map out of empty type
+  λ f ↦ (Sigma.mk f λ _ ↦ Empty.rec ) --I don't know how to map out of empty type
 
 def linearMap {T T' : Type} : (T -> T') -> polymap (linear T) (linear T') :=
   λ f ↦ (Sigma.mk f λ _ _ ↦ Unit.unit)
@@ -43,13 +39,12 @@ def polyid {p : Poly} : polymap p p :=
   (Sigma.mk (ident) λ _ ↦ ident)
 
 def bang0poly {p : Poly} : polymap poly0 p  := 
-  (Sigma.mk bang0 sorry) -- sorry should just be bang0
-def bang1poly {P : Poly} : polymap P poly1 := (Sigma.mk bang1 λ _ ↦ bang0)
+  (Sigma.mk Empty.rec Empty.rec) 
+def bang1poly {P : Poly} : polymap P poly1 := (Sigma.mk bang1 λ _ ↦ Empty.rec)
 
 def composemap {p q r : Poly} : (polymap p q) -> (polymap q r) -> (polymap p r) :=
   λ f g ↦ 
   let onPos : p.pos -> r.pos := g.fst ∘ f.fst
   let onDir : (P : p.pos) -> (r.dir $ onPos P) -> (p.dir P) := λ P rd ↦ (f.snd P $ g.snd (f.fst P) rd)
   (Sigma.mk onPos onDir)
-
 

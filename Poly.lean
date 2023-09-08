@@ -16,7 +16,10 @@ def yon : Poly := linear Unit
 
 def representable (D : Type) : Poly := monomial Unit D
 
---def bang0 {T : Type} : Empty -> T  := λ _ ↦ absurd
+def bang0 {T : Type} : Empty -> T  := by 
+  intro x
+  cases x
+
 def bang1 {T : Type} : T -> Unit := λ _ ↦ Unit.unit 
 def ident {T : Type} : T -> T := λ t ↦ t
 
@@ -28,7 +31,7 @@ def polymap (p q: Poly) : Type :=
 
 def constantMap {T T' : Type} : 
   (T -> T') -> polymap (const T) (const T') :=
-  λ f ↦ (Sigma.mk f λ _ ↦ sorry ) 
+  λ f ↦ (Sigma.mk f λ _ ↦ bang0 ) --I don't know how to map out of empty type
 
 def linearMap {T T' : Type} : (T -> T') -> polymap (linear T) (linear T') :=
   λ f ↦ (Sigma.mk f λ _ _ ↦ Unit.unit)
@@ -39,8 +42,9 @@ def representableMap {T T' : Type} : (T -> T') -> polymap (representable T') (re
 def polyid {p : Poly} : polymap p p :=
   (Sigma.mk (ident) λ _ ↦ ident)
 
-def bang0poly {p : Poly} : polymap poly0 p  := sorry
-def bang1poly {P : Poly} : polymap P poly1 := (Sigma.mk bang1 λ _ ↦ sorry)
+def bang0poly {p : Poly} : polymap poly0 p  := 
+  (Sigma.mk bang0 sorry) -- sorry should just be bang0
+def bang1poly {P : Poly} : polymap P poly1 := (Sigma.mk bang1 λ _ ↦ bang0)
 
-def composemap {p q r : Poly} (polymap p q) -> (polymap q r) -> (polymap p r) :=
+def composemap {p q r : Poly} : (polymap p q) -> (polymap q r) -> (polymap p r) :=
 sorry --Priyaa?

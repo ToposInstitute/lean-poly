@@ -1,5 +1,5 @@
 structure Poly where 
-  pos : Type
+  pos : Type 
   dir : pos -> Type
 
 def monomial (P D : Type) : Poly :=
@@ -14,7 +14,7 @@ def const (P : Type) : Poly := P y^Empty  -- monomial P Empty
 def linear (P : Type) : Poly := P y^Unit
 def poly1 : Poly := const Unit
 def poly0 : Poly := const Empty
-def yon : Poly := linear Unit
+def y : Poly := linear Unit
 
 def representable (D : Type) : Poly := monomial Unit D
 
@@ -22,7 +22,7 @@ def bang1 {T : Type} : T -> Unit := λ _ ↦ Unit.unit
 def ident {T : Type} : T -> T := λ t ↦ t
 
 def applyFun : Poly -> Type -> Type:= 
-  λ p T ↦ Σ (P : p.pos), (p.dir P -> T)
+  λ p T ↦ (P : p.pos) × ((p.dir P) -> T)
 
 ------------- Maps ------------
 
@@ -83,8 +83,32 @@ theorem unitr {p q : Poly} : (f : p ⇒ q) -> f = (polyid ; f) := by
   intros
   rfl
 
-def toTransformation {p q : Poly} : (f : p ⇒ q) -> (T : Type) -> (applyFun p T) -> (applyFun q T) := 
-  λ f T Pt ↦ 
+def toTransformation {p q : Poly} : (f : p ⇒ q) -> (T : Type) -> 
+  (applyFun p T) -> (applyFun q T) := 
+  λ f _ Pt ↦ 
   let P := Pt.fst
-  let t := Pt.snd P
-  (Sigma.mk (f.fst P) ?)
+  let Q := Pt.snd
+  (Sigma.mk (f.fst P) (Q ∘ f.snd P))
+
+-------- Substitution product ----------
+
+def subst : Poly -> Poly -> Poly := 
+  λ p q ↦ 
+  {
+    pos := applyFun p q.pos
+    dir := λ x ↦ 
+      let P := x.fst 
+      let Q := x.snd  
+    (d : p.dir P) × (q.dir (Q d))  
+  }
+
+notation:60 p "◁" q => subst p q
+
+def unitSubstRight {p : Poly} : (p ◁ y) ⇒ p :=
+  λ p ↦ 
+  (Sigma.mk (λ P ↦ P.fst) (λ P d ↦ (Sigma.mk d Unit)))
+
+structure Comonad where
+  carrier : Poly
+  counit  : carrier ⇒ y
+  comult  : carrier ⇒ carrier ◁ carrier

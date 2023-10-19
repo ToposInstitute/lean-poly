@@ -6,12 +6,12 @@ We highly recommend using Lean with VSCode. More information about Lean and its 
 
 1. Install [VSCode](https://code.visualstudio.com/download).
 2. Install [Lean](https://leanprover-community.github.io/get_started.html).
-3. Install VSCode [Lean4 extension](https://github.com/leanprover/vscode-lean4). Even though the extension installs some version of Lean, please follow Step 2 above to ensure you get the full capabilities of Lean.
+3. Install [Lean4 extension](https://github.com/leanprover/vscode-lean4) in VSCode.
 4. Clone this git repository.
     ```
     git clone git@github.com:ToposInstitute/lean-poly.git
     ```
-5. Install Lean packages using `lake` (lean make) and start VSCode.
+5. Install Lean packages using `lake` (lean make) and restart VSCode.
     ```
     cd lean-poly
     lake update
@@ -21,7 +21,7 @@ We highly recommend using Lean with VSCode. More information about Lean and its 
 
 ## Initialization
 
-This is a record of how this project was created using `lake`. Please do not repeat these steps in the repository.
+This is a record of how this project was created using `lake`. The steps were taken from these [notes](https://leanprover-community.github.io/install/project.html). Please do not repeat these steps in the repository.
 
 1. Create project with `mathlib`.
     ```

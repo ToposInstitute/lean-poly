@@ -1,3 +1,3 @@
-import MathLib.Topology.Basic
+import Mathlib.Topology.Basic
 
 #check TopologicalSpace

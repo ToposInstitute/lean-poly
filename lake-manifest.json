@@ -4,7 +4,7 @@
  [{"git":
    {"url": "https://github.com/leanprover-community/mathlib4.git",
     "subDir?": null,
-    "rev": "aedc01b08fc48b972c09a9d69a34bba706062078",
+    "rev": "c77531abe48e2d2cb5029d5a270f7b6f5cb964a0",
     "opts": {},
     "name": "mathlib",
     "inputRev?": null,
@@ -12,7 +12,7 @@
   {"git":
    {"url": "https://github.com/leanprover/std4",
     "subDir?": null,
-    "rev": "a71c160b1934814837d37f377efaf2964e55c433",
+    "rev": "795918af0b01cd79aea67f828f215cca71699eca",
     "opts": {},
     "name": "std",
     "inputRev?": "main",
@@ -34,19 +34,19 @@
     "inputRev?": "master",
     "inherited": true}},
   {"git":
-   {"url": "https://github.com/leanprover/lean4-cli",
-    "subDir?": null,
-    "rev": "a751d21d4b68c999accb6fc5d960538af26ad5ec",
-    "opts": {},
-    "name": "Cli",
-    "inputRev?": "nightly",
-    "inherited": true}},
-  {"git":
    {"url": "https://github.com/leanprover-community/ProofWidgets4",
     "subDir?": null,
     "rev": "f1a5c7808b001305ba07d8626f45ee054282f589",
     "opts": {},
     "name": "proofwidgets",
     "inputRev?": "v0.0.21",
+    "inherited": true}},
+  {"git":
+   {"url": "https://github.com/leanprover/lean4-cli",
+    "subDir?": null,
+    "rev": "a751d21d4b68c999accb6fc5d960538af26ad5ec",
+    "opts": {},
+    "name": "Cli",
+    "inputRev?": "main",
     "inherited": true}}],
  "name": "«lean-poly»"}

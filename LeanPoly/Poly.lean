@@ -623,7 +623,7 @@ def homTensor.eval (p r : Poly) : ⟦ p, r ⟧ ⊗ p ⟶ r where
   onPos := λ (φ, pPos) ↦ φ.onPos pPos
   onDir := λ (φ, pPos) dirR ↦ (⟨pPos, dirR⟩, φ.onDir pPos dirR)
 
-def homTensor.closed.hom.adjunction.homEquiv.toFun {p : Poly} (φ : (p ⊗ X ⟶ Y)) : (X ⟶ ⟦p, Y⟧ ) :=
+def homTensor.closed.adjunction.homEquiv.toFun {p : Poly} (φ : (p ⊗ X ⟶ Y)) : (X ⟶ ⟦p, Y⟧ ) :=
     let curriedOnPos (xPos : X.pos) : p ⟶ Y :=
         { onPos := λ pPos ↦ φ.onPos (pPos, xPos)
         -- We have to bee explicit about φ.onPos here; if we pattern match on φ
@@ -638,7 +638,7 @@ def homTensor.closed.hom.adjunction.homEquiv.toFun {p : Poly} (φ : (p ⊗ X ⟶
       { onPos := curriedOnPos
         onDir := curriedOnDir }
 
-def homTensor.closed.hom.adjunction.homEquiv.invFun {p : Poly} (ψ : X ⟶ ⟦p, Y⟧ ) : (p ⊗ X ⟶ Y) :=
+def homTensor.closed.adjunction.homEquiv.invFun {p : Poly} (ψ : X ⟶ ⟦p, Y⟧ ) : (p ⊗ X ⟶ Y) :=
   let uncurriedOnPos (pxPos : (p ⊗ X).pos) : Y.pos :=
     let ⟨pPos, xPos⟩ := pxPos
     let intermediate := ψ.onPos xPos
@@ -651,19 +651,28 @@ def homTensor.closed.hom.adjunction.homEquiv.invFun {p : Poly} (ψ : X ⟶ ⟦p,
     onDir := uncurriedOnDir }
 
 
-def homTensor.closed.hom.adjunction.homEquiv (p X Y : Poly) :
+def homTensor.closed.adjunction.homEquiv (p X Y : Poly) :
   (p ⊗ X ⟶ Y)  -- Hom(p ⊗ X, Y)  (same as X ⊗ p because ⊗ is symmetric)
   ≃
   (X ⟶ ⟦p, Y⟧ ) -- Hom (X, ⟦p, Y⟧)
   where
-   toFun := homTensor.closed.hom.adjunction.homEquiv.toFun
-   invFun := homTensor.closed.hom.adjunction.homEquiv.invFun
-   -- TODO: Prove these are inverses
-   left_inv := by _
-   right_inv := by _
+   toFun := homTensor.closed.adjunction.homEquiv.toFun
+   invFun := homTensor.closed.adjunction.homEquiv.invFun
+   left_inv := by
+    intro ψ
+    unfold homTensor.closed.adjunction.homEquiv.toFun
+    unfold homTensor.closed.adjunction.homEquiv.invFun
+    simp
+    rfl
+   right_inv := by
+    intro ψ
+    unfold homTensor.closed.adjunction.homEquiv.toFun
+    unfold homTensor.closed.adjunction.homEquiv.invFun
+    simp
+    rfl
 
 def homTensor.closed.adjunction (p : Poly) : MonoidalCategory.tensorLeft p ⊣ homTensor.closed.right p :=
-  Adjunction.mkOfHomEquiv {homEquiv := homTensor.closed.hom.adjunction.homEquiv p}
+  Adjunction.mkOfHomEquiv {homEquiv := homTensor.closed.adjunction.homEquiv p}
 
 instance : Closed (p : Poly) where
   isAdj := {right := homTensor.closed.right p, adj := homTensor.closed.adjunction p}

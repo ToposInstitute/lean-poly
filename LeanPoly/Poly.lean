@@ -563,44 +563,20 @@ def tensor.unit.r.bwd {P : Poly} : P ⟶ P ⊗ y :=
   , onDir := λ _ (pdir , _) => pdir
   }
 
-def tensor.leftUnitor.hom (p : Poly) : (y ⊗ p) ⟶ p where
-  onPos | (_, pPos) => pPos
-  onDir | (_, _), pDir => ((), pDir)
+def tensor.leftUnitor (p : Poly) : (y ⊗ p) ≅ p :=
+  { hom := tensor.unit.l.fwd
+  , inv := tensor.unit.l.bwd
+  }
 
-def tensor.leftUnitor.inv (p : Poly) : p ⟶ (y ⊗ p) where
-  onPos | pPos => ((), pPos)
-  onDir | _, (_, pDir) => pDir
+def tensor.rightUnitor (p : Poly) : (p ⊗ y) ≅ p :=
+  { hom := tensor.unit.r.fwd
+  , inv := tensor.unit.r.bwd
+  }
 
-def tensor.leftUnitor (p : Poly) : (y ⊗ p) ≅ p where
-  hom := tensor.leftUnitor.hom p
-  inv := tensor.leftUnitor.inv p
-
-def tensor.rightUnitor.hom (p : Poly) : (p ⊗ y) ⟶ p where
-  onPos | (pPos, ()) => pPos
-  onDir | _, pDir => (pDir, ())
-
-def tensor.rightUnitor.inv (p : Poly) : p ⟶ (p ⊗ y) where
-  onPos | pPos => (pPos, ())
-  onDir | _, (pDir, _) => pDir
-
-def tensor.rightUnitor (p : Poly) : (p ⊗ y) ≅ p where
-  hom := tensor.rightUnitor.hom p
-  inv := tensor.rightUnitor.inv p
-
-def tensor.associator.hom (p q r : Poly) :
-  (p ⊗ q) ⊗ r ⟶ p ⊗ (q ⊗ r) where
-  onPos | ((pPos, qPos), rPos) => (pPos, (qPos, rPos))
-  onDir | _, (pDir, (qDir, rDir)) => ((pDir, qDir), rDir)
-
-def tensor.associator.inv (p q r : Poly) :
-  p ⊗ (q ⊗ r) ⟶ (p ⊗ q) ⊗ r where
-  onPos | (pPos, (qPos, rPos)) => ((pPos, qPos), rPos)
-  onDir | _, ((pDir, qDir), rDir) => (pDir, (qDir, rDir))
-
-def tensor.associator (p q r : Poly) : (p ⊗ q) ⊗ r ≅ p ⊗ (q ⊗ r) where
-  hom := tensor.associator.hom p q r
-  inv := tensor.associator.inv p q r
-
+def tensor.associator (p q r : Poly) : (p ⊗ q) ⊗ r ≅ p ⊗ (q ⊗ r) :=
+  { hom := tensor.assoc.bwd
+  , inv := tensor.assoc.fwd
+  }
 
 instance Poly.tensor.monoidalStruct : MonoidalCategoryStruct Poly where
   tensorObj    := tensor

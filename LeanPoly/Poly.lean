@@ -65,6 +65,7 @@ structure Poly where
   dir : pos -> Type v
 
 /-- The type of lenses/maps from one polynomial functor to another. -/
+@[ext]
 structure polymap (p q : Poly.{u, v}) : Type max u v where
   onPos : p.pos -> q.pos
   onDir : (x : p.pos) -> q.dir (onPos x) -> p.dir x
@@ -473,8 +474,8 @@ def product.fanout {p q r : Poly} (f : r ⟶ p) (g : r ⟶ q) : r ⟶ p × q :=
   }
 
 def product.leftUnitor.hom (p : Poly) : (𝟭 × p) ⟶ p where
-  onPos := λ (_Unit , ppos) ↦ ppos
-  onDir := λ (_Unit , _ppos) pdir ↦ .inr pdir
+  onPos := λ (() , ppos) ↦ ppos
+  onDir := λ (() , _ppos) pdir ↦ .inr pdir
 
 def product.leftUnitor.inv (p : Poly) : p ⟶ (𝟭 × p) where
   onPos := λ ppos ↦ (.unit , ppos)
@@ -482,14 +483,26 @@ def product.leftUnitor.inv (p : Poly) : p ⟶ (𝟭 × p) where
   match dir with
   | .inr pfib => pfib
 
--- TODO:
--- def product.leftUnitor (p : Poly) : (𝟭 × p) ≅ p where
---   hom := product.leftUnitor.hom p
---   inv := product.leftUnitor.inv p
---   hom_inv_id := _
---   inv_hom_id := by {
---     _
---   }
+def product.leftUnitor.hom_inv_id : composemap (leftUnitor.hom p) (leftUnitor.inv p) = 𝟙 (𝟭 × p)
+  := by
+      unfold composemap
+      ext
+      . rfl
+      . simp
+        funext _ dir
+        cases dir
+        . contradiction
+        . rfl
+
+def product.leftUnitor (p : Poly) : (𝟭 × p) ≅ p :=
+  { hom := product.leftUnitor.hom p
+  , inv := product.leftUnitor.inv p
+  , hom_inv_id := product.leftUnitor.hom_inv_id -- extracted so that we may unfold composemap
+  , inv_hom_id := by
+      unfold product.leftUnitor.hom
+      simp
+      rfl
+  }
 
 /-!
 ## Parallel product

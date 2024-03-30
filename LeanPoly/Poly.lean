@@ -388,22 +388,42 @@ def coproduct.leftUnitor.hom (p : Poly) : (𝟬 + p) ⟶ p where
   onPos := λ pos ↦
   match pos with
   | .inr ppos => ppos
-  onDir := λ pos ↦
+  onDir := λ pos dir ↦
   match pos with
-  | .inr _ppos => id
+  | .inr _ppos => dir
 
 def coproduct.leftUnitor.inv (p : Poly) : p ⟶ (𝟬 + p) where
   onPos := λ ppos ↦ .inr ppos
   onDir := λ _ppos pdir ↦ pdir
 
--- TODO:
--- def coproduct.leftUnitor (p : Poly) : (𝟬 + p) ≅ p where
---   hom := coproduct.leftUnitor.hom p
---   inv := coproduct.leftUnitor.inv p
---   hom_inv_id := _
---   inv_hom_id := by {
---     _
---   }
+
+def coproduct.leftUnitor.inv_hom_id : composemap (leftUnitor.inv p) (leftUnitor.hom p) = polyid p :=
+  by
+  unfold composemap
+  unfold polyid
+  simp
+  exact (And.intro rfl rfl)
+
+def coproduct.leftUnitor.hom_inv_id :
+    composemap (leftUnitor.hom p) (leftUnitor.inv p) = polyid (𝟬 + p) := by
+  ext d
+  . cases d
+    . contradiction
+    . rfl
+  . cases p
+    simp only [hom, inv, composemap, polyid, Function.comp_apply, id_eq]
+    congr!
+    · split
+      assumption
+    · split
+      assumption
+
+
+def coproduct.leftUnitor (p : Poly) : (𝟬 + p) ≅ p where
+  hom := coproduct.leftUnitor.hom p
+  inv := coproduct.leftUnitor.inv p
+  hom_inv_id := coproduct.leftUnitor.hom_inv_id
+  inv_hom_id := coproduct.leftUnitor.inv_hom_id
 
 -- TODO:
 -- instance Poly.coproduct.monoidalStruct : MonoidalCategoryStruct Poly where
